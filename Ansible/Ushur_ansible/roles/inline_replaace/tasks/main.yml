@@ -1,0 +1,31 @@
+- name: "Update the config overrides if config is does not exist"
+  become: true
+  become_user: root
+  become_method: sudo
+  lineinfile:
+    path: /ushurapp/overrides/ushur.conf.override
+    regexp: "{{item.exp}}"
+    line: "{{item.str}}"
+    state: present
+    backup: no
+    owner: ushur
+    group: ushur
+  loop:
+    - exp: "^#account activation by admin flag"
+      str: "#account activation by admin flag"
+    - exp: "^ushur.account.activation.admin=true"
+      str: "ushur.account.activation.admin=true"
+    - exp: "^# Admin Email List For System Notifications"
+      str: "# Admin Email List For System Notifications"
+    - exp: "^ushur.admin.email.list="
+      str: "ushur.admin.email.list=qa_approver@ushur.com,devops_approver@ushur.com"
+    - exp: "^ushur.admin.email.list.ushweb.accountcreation"
+      str: "ushur.admin.email.list.ushweb.accoutcreation=qa_approver@ushur.com,devops_approver@ushur.com"
+    - exp: "^ushur.admin.email.list.ushweb.accountactivation"
+      str: "ushur.admin.email.list.ushweb.accoutactivation=qa_approver@ushur.com,devops_approver@ushur.com"
+
+- name: "Restart ushurapp service"
+  systemd:
+    name: ushurapp
+    state: restarted
+    enabled: yes

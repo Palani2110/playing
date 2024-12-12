@@ -1,0 +1,11 @@
+---
+- name: Update User Password
+  hosts: ushurplatform_server
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Update the Database User Password
+      include_role:
+        name: inline_replace
